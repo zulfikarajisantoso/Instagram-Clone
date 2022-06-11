@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import hp from "../assets/hp.png";
 import insta from "../assets/insta.png";
 import app from "../assets/app.png";
 import play from "../assets/play.png";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
 import { useStateValue } from "../Stateprovider";
 import { actionTypes } from "../reducer";
@@ -13,6 +13,8 @@ import { actionTypes } from "../reducer";
 function Login() {
   const navigate = useNavigate();
   const [{}, dispatch] = useStateValue();
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
 
   const signin = () => {
     signInWithPopup(auth, provider).then((res) => {
@@ -21,6 +23,17 @@ function Login() {
         user: res.user,
       });
 
+      navigate("/");
+    });
+  };
+
+  const singinmanual = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password).then((res) => {
+      dispatch({
+        type: actionTypes.SET_USER,
+        user: res.user,
+      });
       navigate("/");
     });
   };
@@ -34,20 +47,27 @@ function Login() {
         <div className="flex flex-col gap-y-3 items-center">
           <div className="bg-white border-2 flex flex-col  pt-10 px-10 pb-5 items-center w-3/5 h-3/5">
             <img src={insta} alt="" className="mb-5" />
-            <form action="" className="input flex flex-col w-full gap-y-3 ">
+            <form
+              action=""
+              className="input flex flex-col w-full gap-y-3 "
+              onSubmit={singinmanual}
+            >
               <input
                 type="email"
                 name="email"
-                placeholder="Phone number, username or email address inp"
-                className="formlogin w-full h-10 "
+                onChange={(e) => setemail(e.target.value)}
+                placeholder="Phone number, username or email address "
+                className="formlogin w-full h-10 inp"
               />
               <input
                 type="password"
                 name="password"
+                onChange={(e) => setpassword(e.target.value)}
                 placeholder="Password"
                 className="formlogin outline-none w-full h-10  inp"
               />
               <button
+                type="submit"
                 className="w-full text-white font-semibold py-1"
                 style={{ background: "#0095f6", borderRadius: "4px" }}
               >

@@ -18,11 +18,20 @@ function Miniprofile() {
     <div className="p-5">
       <div className=" flex justify-between items-center">
         <div className="flex space-x-2   items-center">
-          <img
-            src={user?.photoURL}
-            alt=""
-            className=" h-10 w-10 rounded-full "
-          />
+          {user.photoURL ? (
+            <img
+              src={user?.photoURL}
+              alt=""
+              className=" h-10 w-10 rounded-full "
+            />
+          ) : (
+            <img
+              src="https://i.pinimg.com/474x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg"
+              alt=""
+              className=" h-10 w-10 rounded-full "
+            />
+          )}
+
           <div className="flex flex-col justify-center">
             <h5 className="text-sm font-semibold">{user?.displayName}</h5>
             <h6 className="text-xs">My Instagram</h6>

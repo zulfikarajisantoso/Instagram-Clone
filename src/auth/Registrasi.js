@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import app from "../assets/app.png";
 import play from "../assets/play.png";
 import insta from "../assets/insta.png";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useStateValue } from "../Stateprovider";
+import { auth } from "../firebase";
+import { actionTypes } from "../reducer";
+
 function Registrasi() {
+  const [password, setpassword] = useState("");
+  const [username, setusername] = useState("");
+  const [email, setemail] = useState("");
+  const [{}, dispatch] = useStateValue();
+  const navigate = useNavigate();
+
+  const regis = (e) => {
+    e.preventDefault();
+
+    createUserWithEmailAndPassword(auth, email, password).then((res) => {
+      dispatch({
+        type: actionTypes.SET_USER,
+        user: res.user,
+      });
+      updateProfile(auth.currentUser, {
+        displayName: username,
+      });
+      navigate("/login");
+    });
+  };
+
   return (
     <div className="  items-center  flex justify-center">
       <div className="w-6/12  h-full p-5">
@@ -32,22 +58,29 @@ function Registrasi() {
             </div>
 
             {/* form */}
-            <form action="" className="input flex flex-col w-full gap-y-3 ">
+            <form
+              action=""
+              className="input flex flex-col w-full gap-y-3 "
+              onSubmit={regis}
+            >
               <input
                 type="text"
                 name="username"
+                onChange={(e) => setusername(e.target.value)}
                 placeholder="Username"
                 className="formlogin outline-none w-full h-10 inp "
               />
               <input
                 type="email"
                 name="email"
+                onChange={(e) => setemail(e.target.value)}
                 placeholder="Phone number, username or email address"
                 className="formlogin outline-none w-full h-10  inp"
               />
               <input
                 type="password"
                 name="password"
+                onChange={(e) => setpassword(e.target.value)}
                 placeholder="Password"
                 className="formlogin outline-none w-full h-10 inp"
               />
@@ -58,6 +91,7 @@ function Registrasi() {
               </h6>
 
               <button
+                type="submit"
                 className="w-full text-white font-semibold py-1"
                 style={{ background: "#0095f6", borderRadius: "4px" }}
               >

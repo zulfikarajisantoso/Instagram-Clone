@@ -22,12 +22,21 @@ function Stories() {
     >
       {user && (
         <div className="flex flex-col justify-center items-center">
-          <img
-            src={user.photoURL}
-            className=" bg-white h-11 w-11 rounded-full p-[1.5px] border-2 border-red-500 object-contain cursor-pointer  hover:scale-110 ease-out duration-200 transition-all "
-          />
+          {user.photoURL ? (
+            <img
+              src={user.photoURL}
+              className=" bg-white h-11 w-11 rounded-full p-[1.5px] border-2 border-red-500 object-contain cursor-pointer  hover:scale-110 ease-out duration-200 transition-all "
+            />
+          ) : (
+            <img
+              src="https://i.pinimg.com/474x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg"
+              alt="SOON"
+              className=" bg-white h-11 w-11 rounded-full p-[1.5px] border-2 border-red-500 object-contain cursor-pointer  hover:scale-110 ease-out duration-200 transition-all "
+            />
+          )}
+
           <h3 className="text-center text-xs w-14 truncate">
-            {user.displayName}
+            {user?.displayName}
           </h3>
         </div>
       )}

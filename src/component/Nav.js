@@ -10,12 +10,12 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useStateValue } from "../Stateprovider";
 import { useRecoilState } from "recoil";
-import { modalState } from "../atoms/modelAtoms";
+import { cari, modalState } from "../atoms/modelAtoms";
 
 function Nav() {
   const [{ user }, dispatch] = useStateValue();
   const [open, setopen] = useRecoilState(modalState);
-
+  const [carcar, setcarcar] = useRecoilState(cari);
   const signout = () => {
     signOut(auth).then((res) => {
       window.location.reload();
@@ -31,6 +31,7 @@ function Nav() {
         <BiSearch className="ml-3 mr-1" />
         <input
           type="text"
+          onChange={(e) => setcarcar(e.target.value)}
           className="inse bg-transparent  outline-none p-1"
           placeholder="Search"
         />
@@ -58,11 +59,19 @@ function Nav() {
             </button>
 
             <button onClick={signout}>
-              <img
-                src={user.photoURL}
-                alt=""
-                style={{ borderRadius: "50%", width: "23px", height: "23px" }}
-              />
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt=""
+                  style={{ borderRadius: "50%", width: "23px", height: "23px" }}
+                />
+              ) : (
+                <img
+                  src="https://i.pinimg.com/474x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg"
+                  alt=""
+                  style={{ borderRadius: "50%", width: "23px", height: "23px" }}
+                />
+              )}
             </button>
           </>
         ) : (

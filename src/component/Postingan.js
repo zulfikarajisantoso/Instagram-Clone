@@ -3,6 +3,7 @@ import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { BsChat, BsBookmark } from "react-icons/bs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { FiSend } from "react-icons/fi";
+import { BiTrash } from "react-icons/bi";
 import { MdInsertEmoticon } from "react-icons/md";
 import { db } from "../firebase";
 import {
@@ -26,6 +27,8 @@ function Postingan({ id, profileimage, image, username, caption }) {
   const [commentnya, setcommentnya] = useState([]);
   const [likes, setlikes] = useState([]);
   const [haslike, sethaslike] = useState(false);
+
+  // const [commnya, setcommnya] = useState(false);
 
   const postcomment = async (e) => {
     e.preventDefault();
@@ -72,19 +75,39 @@ function Postingan({ id, profileimage, image, username, caption }) {
     [likes]
   );
 
+  // useEffect(
+  //   () =>
+  //     setcommnya(commentnya.findIndex((like) => like.id === user?.uid) !== -1),
+  //   [commentnya]
+  // );
+
+  const hpus = async (idd) => {
+    await deleteDoc(doc(db, "posts", id, "comments", idd));
+  };
+
+  const hapuspost = (idd) => {
+    deleteDoc(doc(db, "posts", idd));
+  };
+
   return (
     <>
       <div className="bg-white border-[1px] rounded-[8px] ">
         <div className="flex w-full justify-between p-3 items-center">
           <div className="flex items-center gap-3">
-            <img
-              src={profileimage}
-              alt=" "
-              className=" w-10 h-10 rounded-full "
-            />
+            {profileimage ? (
+              <img src={profileimage} className=" w-10 h-10 rounded-full " />
+            ) : (
+              <img
+                src="https://i.pinimg.com/474x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg"
+                className=" w-10 h-10 rounded-full "
+              />
+            )}
+
             <h6 className="text-sm">{username}</h6>
           </div>
-          <IoEllipsisHorizontalSharp />
+          <button onClick={(e) => hapuspost(id)} disabled={!user}>
+            <BiTrash />
+          </button>
         </div>
         {/* button */}
 
@@ -136,11 +159,19 @@ function Postingan({ id, profileimage, image, username, caption }) {
                 key={com.id}
               >
                 <div className="flex items-center">
-                  <img
-                    src={com.data().userimage}
-                    alt=""
-                    className="h-7 w-7 rounded-full my-2"
-                  />
+                  {com.data().userimage ? (
+                    <img
+                      src={com.data().userimage}
+                      alt=""
+                      className="h-7 w-7 rounded-full my-2"
+                    />
+                  ) : (
+                    <img
+                      src="https://i.pinimg.com/474x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg"
+                      className="h-7 w-7 rounded-full my-2"
+                    />
+                  )}
+
                   <h6 className="text-[12px] ">
                     <span className="font-bold ml-2">
                       {com.data().username}
@@ -148,9 +179,18 @@ function Postingan({ id, profileimage, image, username, caption }) {
                     {com.data().comment}
                   </h6>
                 </div>
-                <Moment fromNow className="text-[9px] pr-5">
-                  {com.data().timestamp?.toDate()}
-                </Moment>
+                <div className="flex">
+                  <Moment fromNow className="text-[9px] pr-5">
+                    {com.data().timestamp?.toDate()}
+                  </Moment>
+                  <button
+                    onClick={(e) => hpus(com.id)}
+                    disabled={!user}
+                    className="flex items-center"
+                  >
+                    <BiTrash />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
